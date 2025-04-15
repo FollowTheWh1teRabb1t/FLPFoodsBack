@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")  
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  reservas Reserva[]
+  role     String @default("user")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Mesa {
+  id Int @id @default(autoincrement())
+  numero Int @unique
+  reservas Reserva[]
+}
+
+model Reserva {
+  id         Int     @id @default(autoincrement())
+  usuario    User    @relation(fields: [usuarioId], references: [id])
+  usuarioId  Int     // Corrigido de String para Int
+  mesa       Mesa    @relation(fields: [mesaId], references: [id])
+  mesaId     Int
+  data       DateTime
+  horario    String
+  nome       String?
+  telefone   String?
+}
+
+
+
+
